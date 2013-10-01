@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib import admin
 from numpy import mean
 
 # Create your models here.
@@ -24,19 +23,3 @@ class MeasurementSet(models.Model):
         self.measurement_count = len(measurements)
         self.measurement_mean = mean(measurements)
         super(MeasurementSet, self).save(*args, **kwargs)
-
-
-# admin
-class MeasurementInline(admin.TabularInline):
-    model = Measurement
-    extra = 10
-
-# class MeasurementAdmin(admin.ModelAdmin):
-#     fields = 
-        
-
-class MeasurementSetAdmin(admin.ModelAdmin):
-    raw_id_fields = ('material',)
-    inlines = [MeasurementInline]
-
-admin.site.register(MeasurementSet,MeasurementSetAdmin)

@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, url
-
+from mpcd.admin import admin_site
 from analyze import views
 
 urlpatterns = patterns('',
     # ex: /polls/
-    url(r'^$',  views.index , name='index'),
+    url(r'^$',  admin_site.admin_view(views.index) , name='index'),
     # # ex: /polls/5/
     # url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
     # # ex: /polls/5/results/

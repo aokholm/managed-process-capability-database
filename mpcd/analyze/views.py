@@ -20,7 +20,7 @@ def index(request, app_name):
     return render(request, 'analyze/index.html', {'app_list': [app_dict],})
 
 
-def process(request, app_name):
+def design(request, app_name):
     measurements_sets = MeasurementSet.objects.all().prefetch_related('process', 'material')
 
     itgrades = sorted([messet.measurement_itg for messet in measurements_sets])
@@ -60,20 +60,20 @@ def process(request, app_name):
     cfdul = [cdf[i] + 2*(1-cdf[i]) * t * cdf_std[i] for i in range(100)]
 
 
-    return render(request, 'analyze/process.html', 
+    return render(request, 'analyze/design.html', 
         {
             'app_label': app_name,
-            'view_label': 'process',
+            'view_label': 'design',
             'itgrades' : itgrades,
             'measurement_sets': measurements_sets,
             'table' : mytable,
 
         })
 
-def design(request, app_name):
-    return render(request, 'analyze/design.html', 
+def process(request, app_name):
+    return render(request, 'analyze/process.html', 
         {
             'app_label': app_name,
-            'view_label': 'design'
+            'view_label': 'process'
         })
         

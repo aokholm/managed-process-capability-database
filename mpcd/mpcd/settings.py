@@ -128,13 +128,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    #'grappelli',
+    'grappelli',
     'django.contrib.admin',
     'south',
     'debug_toolbar',
     'tags',
     'mptt',
     'mesdata',
+    'mptt'
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from mesdata.models import Measurement, MeasurementSet, Mestype
+from mesdata.ITGrade import stdbias2itg
 from numpy import mean, std
 
 
@@ -13,16 +14,17 @@ class MestypeAdmin(admin.TabularInline):
     extra = 1
 
 class MeasurementSetAdmin(admin.ModelAdmin):
-    raw_id_fields = ('material',)
+    raw_id_fields = ('material','process','generaltag','equipment')
+    readonly_fields = ('id',)
 
     fieldsets = [
-    (None,                          {'fields': ['nominal_size','material','tol_up','tol_low','pub_date' ]}),
+    (None,                          {'fields': ['nominal_size','material','process','generaltag','equipment','tol_up','tol_low','pub_date' ]}),
     ('Confidential information',    {'fields': ['price','weight','manufac','measured','machine','pro_yield']}),
     ]
 
     inlines = [MeasurementInline, MestypeAdmin]
 
-    list_display = ('measurement_count','measurement_std','nominal_size','pub_date',)
+    list_display = ('id','measurement_count','measurement_itg','nominal_size','pub_date',)
 
     def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(new_object)
@@ -36,7 +38,11 @@ class MeasurementSetAdmin(admin.ModelAdmin):
         #print obj.related_set.all()
         measurements = [x.actual_size for x in obj.measurements.all()]
         obj.measurement_count = len(measurements)
-        obj.measurement_mean = mean(measurements)
+        nominal_size = obj.nominal_size
+
+        obj.measurement_cpk = 1.33
+        obj.measurement_bias = nominal_size - mean(measurements)
         obj.measurement_std = std(measurements)
+        obj.measurement_itg = stdbias2itg(nominal_size, obj.measurement_std, obj.measurement_bias, obj.measurement_cpk,)
         obj.save()
         return obj

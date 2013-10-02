@@ -35,6 +35,7 @@ class MeasurementSet(models.Model):
     measurement_count = models.IntegerField('No. Measurements',blank=True, default=0)
     measurement_mean = models.FloatField(blank=True, null=True)
     measurement_std = models.FloatField('Standard deviation',blank=True, null=True)
+    measurement_itg = models.FloatField('IT grade', blank=True, null=True)
 
     nominal_size = models.FloatField('Nominal Size')
     tol_up = models.FloatField('Upper tolerance',blank=True, null=True) 
@@ -48,9 +49,12 @@ class MeasurementSet(models.Model):
     pub_date = models.DateTimeField('date published')
 
     material = models.ForeignKey('tags.Material', related_name='measurement_sets')
+    process = models.ForeignKey('tags.Process',related_name='measurement_sets')
+    generaltag = models.ManyToManyField('tags.GeneralTag',related_name='measurement_sets',blank=True,null=True)
+    equipment = models.ForeignKey('tags.MeasurementEquipment',related_name='measurement_sets')
 
     def __unicode__(self):
-        return """No.samples %s, Material: %s, Size: %s""" % (self.material.name, self.measurement_count,self.nominal_size)
+        return """Measurement Set %s""" % (self.id)
     
 
 

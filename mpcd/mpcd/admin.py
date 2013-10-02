@@ -1,5 +1,4 @@
-from django.conf.urls.defaults import patterns
-from django.conf.urls import include, url
+from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.http import HttpResponse
 

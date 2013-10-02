@@ -19,8 +19,12 @@
 
 {% block content %}
    <div class="g-d-c">
-    {% for itgrade in itgrades%}
-        {{ itgrade }}
-    {% endfor %}
+        <pre style="font-family: monospace;">{{ table }}</pre>
+        <br />
+        {% for measurements_set in measurement_sets%}
+            <ul>
+                <li>{{ measurements_set.measurement_itg }}, {{ measurements_set.material.name }}, {{ measurements_set.process.name }}</li>
+            </ul>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -19,6 +19,8 @@
 
 {% block content %}
    <div class="g-d-c">
-        Hello World Process
+    {% for itgrade in itgrades%}
+        {{ itgrade }}
+    {% endfor %}
     </div>
 {% endblock %}

@@ -3,8 +3,11 @@ from mpcd.admin import admin_site
 from analyze import views
 
 urlpatterns = patterns('',
-    # ex: /polls/
+    # ex: /analyze/
     url(r'^$',  admin_site.admin_view(views.index) , name='index'),
+    # ex: /analyze/process/
+    url(r'^process/', admin_site.admin_view(views.process), name='process'),
+    url(r'^design/', admin_site.admin_view(views.design), name='design'),
     # # ex: /polls/5/
     # url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
     # # ex: /polls/5/results/

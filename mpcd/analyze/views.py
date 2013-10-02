@@ -71,7 +71,7 @@ def process(request, app_name):
         })
 
 def design(request, app_name):
-    return render(request, 'analyze/process.html', 
+    return render(request, 'analyze/design.html', 
         {
             'app_label': app_name,
             'view_label': 'design'

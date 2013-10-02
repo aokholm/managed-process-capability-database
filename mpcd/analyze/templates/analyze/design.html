@@ -1,45 +1,8 @@
 {% extends "admin/index.html" %}
-{% load url from future %}
 {% load i18n grp_tags %}
 
 {% block javascripts %}
-    {{ block.super }}
-{% endblock %}
-
-{% if not is_popup %}
-    {% block breadcrumbs %}
-        <ul class="grp-horizontal-list">
-            <li><a href="../">{% trans "Home" %}</a></li>
-            {% for app in app_list %}
-                {% blocktrans with app.name as name %}<li>{{ name }}</li>{% endblocktrans %}
-            {% endfor %}
-        </ul>
-    {% endblock %}
-{% endif %}
-
-
-{% block content %}
-    <div class="g-d-c">
-        <div class="g-d-12 g-d-f">
-            <div class="grp-module" id="app_design">
-                <h2><a href="/myadmin/analyze/" class="grp-section">Analysis</a></h2>
-                <div class="grp-row">
-                        <a href="/myadmin/analyze/design/"><strong>Design View</strong></a>
-                </div>
-                <div class="grp-row">
-                        <a href="/myadmin/analyze/process/"><strong>Process View</strong></a>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-
-{% block content %}
-
-  <head>
-    <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    {{ block.super }} <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
       // Load the Visualization API and the piechart package.
@@ -67,8 +30,8 @@
 
         // Set chart options
         var options = {'title':'How Much Pizza I Ate Last Night',
-                       'width':400,
-                       'height':300};
+                       'width':1000,
+                       'height':500};
  
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
@@ -86,9 +49,32 @@
       }
 
     </script>
-  </head>
-  <body>
+{% endblock %}
+
+
+
+
+<!-- BREADCRUMBS -- >
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <ul class="grp-horizontal-list">
+            <li><a href="../../">{% trans "Home" %}</a></li>
+            <li><a href="../">{% trans app_label|capfirst|escape %}</a></li>
+            <li>{{ view_label|capfirst }}</li>
+        </ul>
+    {% endblock %}
+{% endif %}
+
+{% block content %}
+   <div class="g-d-c">
+    {% for itgrade in itgrades%}
+        {{ itgrade }}
+    {% endfor %}
+    </div>
+
     <!--Div that will hold the pie chart-->
     <div id="chart_div" style="width:400; height:300"></div>
-  </body>
+ 
 {% endblock %}
+
+

@@ -15,6 +15,10 @@ class MestypeAdmin(admin.TabularInline):
 
 class MeasurementSetAdmin(admin.ModelAdmin):
     raw_id_fields = ('material','process','generaltag','equipment')
+    autocomplete_lookup_fields = {
+        'fk':['material','process']
+    }
+    
     readonly_fields = ('id',)
 
     fieldsets = [

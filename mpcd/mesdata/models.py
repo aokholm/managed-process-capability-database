@@ -5,7 +5,6 @@ from django.db import models
 class Measurement(models.Model):
     """ The Measured data for a simple component """
     actual_size = models.FloatField('Actual size') 
-    recoded_date = models.DateField('Recoded date',blank=True, null=True)
 
     measurement_set = models.ForeignKey('MeasurementSet', related_name='measurements')
 
@@ -55,6 +54,10 @@ class MeasurementSet(models.Model):
 
     def __unicode__(self):
         return """Measurement Set %s""" % (self.id)
+
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("id__iexact", "material__icontains","process__icontains","equipment__icontains","generaltag__icontains",)
     
 
 

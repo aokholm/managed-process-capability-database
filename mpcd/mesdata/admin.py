@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mesdata.models import Measurement, MeasurementSet, Mestype
+from mesdata.models import Measurement, MeasurementSet
 from mesdata.ITGrade import stdbias2itg
 from numpy import mean, std
 
@@ -9,24 +9,20 @@ class MeasurementInline(admin.TabularInline):
     model = Measurement
     extra = 10
 
-class MestypeAdmin(admin.TabularInline):
-    model = Mestype
-    extra = 1
-
 class MeasurementSetAdmin(admin.ModelAdmin):
     raw_id_fields = ('material','process','generaltag','equipment')
     autocomplete_lookup_fields = {
-        'fk':['material','process']
+        'fk':['material','process'],
     }
-    
+
     readonly_fields = ('id',)
 
     fieldsets = [
-    (None,                          {'fields': ['nominal_size','material','process','generaltag','equipment','tol_up','tol_low','pub_date' ]}),
+    (None,                          {'fields': ['nominal_size','material','process','generaltag','equipment','measurement_type','tol_up','tol_low','pub_date' ]}),
     ('Confidential information',    {'fields': ['price','weight','manufac','measured','machine','pro_yield']}),
     ]
 
-    inlines = [MeasurementInline, MestypeAdmin]
+    inlines = [MeasurementInline, ]
 
     list_display = ('id','measurement_count','measurement_itg','nominal_size','pub_date',)
 

@@ -14,12 +14,20 @@ class MaterialAlternativeName(models.Model):
     def __unicode__(self):
         return self.name
 
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("material_node__iexact", "name__icontains",)
+
 class ProcessAlternativeName(models.Model):
     name = models.CharField(max_length=60, unique=True)
     process_node = models.ForeignKey('Process', related_name='process_names')
 
     def __unicode__(self):
         return self.name
+
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("process_node__iexact", "name__icontains",)
 
 
 class Material(MPTTModel):
@@ -36,6 +44,10 @@ class Material(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("material_node__iexact", "name__icontains",)
+
 
 class Process(MPTTModel):
     name = models.CharField(max_length=60, unique=True)
@@ -51,6 +63,10 @@ class Process(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("material_node__iexact", "name__icontains",)
+
 
 class GeneralTag(MPTTModel):
     name = models.CharField(max_length=60, unique=True)
@@ -62,6 +78,10 @@ class GeneralTag(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("material_node__iexact", "name__icontains",)
+
 class MeasurementEquipment(MPTTModel):
     name = models.CharField(max_length=60, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
@@ -71,3 +91,7 @@ class MeasurementEquipment(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['name']
+
+    @staticmethod
+    def autocomplete_search_fields():
+        return ("material_node__iexact", "name__icontains",)

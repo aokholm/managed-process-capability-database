@@ -12,24 +12,6 @@ class Measurement(models.Model):
     def __unicode__(self):
         return str(self.actual_size)
 
-class Mestype(models.Model):
-    """ Choose type of Measurement"""
-    measurement_set = models.ForeignKey('MeasurementSet')
-    ANGLE = 'A'
-    LENGTH = 'L'
-    CIRCULARITY = 'C'
-    PARALLELLITY = 'P'
-    MESTYPE_CHOICES = (
-        (ANGLE, 'Angle'),
-        (LENGTH, 'length'),
-        (CIRCULARITY, 'Circularity'),
-        (PARALLELLITY, 'parallellity'),
-    )
-    mestype = models.CharField(max_length=1, choices=MESTYPE_CHOICES, default='L')
-
-    def __unicode__(self):
-        return self.mestype
-
 class MeasurementSet(models.Model):
     measurement_count = models.IntegerField('No. Measurements',blank=True, default=0)
     measurement_mean = models.FloatField(blank=True, null=True)
@@ -51,6 +33,18 @@ class MeasurementSet(models.Model):
     process = models.ForeignKey('tags.Process',related_name='measurement_sets')
     generaltag = models.ManyToManyField('tags.GeneralTag',related_name='measurement_sets',blank=True,null=True)
     equipment = models.ForeignKey('tags.MeasurementEquipment',related_name='measurement_sets')
+
+    ANGLE = 'A'
+    LENGTH = 'L'
+    CIRCULARITY = 'C'
+    PARALLELLITY = 'P'
+    MESTYPE_CHOICES = (
+        (ANGLE, 'Angle'),
+        (LENGTH, 'length'),
+        (CIRCULARITY, 'Circularity'),
+        (PARALLELLITY, 'parallellity'),
+    )
+    measurement_type = models.CharField(max_length=1, choices=MESTYPE_CHOICES, default='L')
 
     def __unicode__(self):
         return """Measurement Set %s""" % (self.id)

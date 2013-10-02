@@ -15,7 +15,7 @@ class Measurement(models.Model):
 
 class MeasurementSet(models.Model):
     measurement_count = models.IntegerField('No. Measurements',blank=True, default=0)
-    measurement_mean = models.FloatField(blank=True, null=True)
+    measurement_bias = models.FloatField(blank=True, null=True)
     measurement_std = models.FloatField('Standard deviation',blank=True, null=True)
     measurement_itg = models.FloatField('IT grade', blank=True, null=True)
 

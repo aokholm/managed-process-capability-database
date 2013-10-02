@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime    
 
 
 # Create your models here.
@@ -27,7 +28,7 @@ class MeasurementSet(models.Model):
     measured = models.CharField(max_length=200,blank=True, null=True)
     machine = models.CharField(max_length=200,blank=True, null=True)
     pro_yield = models.CharField(max_length=200,blank=True, null=True)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published',default=datetime.now, blank=False)
 
     material = models.ForeignKey('tags.Material', related_name='measurement_sets')
     process = models.ForeignKey('tags.Process',related_name='measurement_sets')

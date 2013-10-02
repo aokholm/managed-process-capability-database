@@ -135,7 +135,11 @@ INSTALLED_APPS = (
     'tags',
     'mptt',
     'mesdata',
+<<<<<<< HEAD
+    'mptt'
+=======
     'analyze',
+>>>>>>> fc331b4cfc451a3e4254849d2e5fe6c75f351da7
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

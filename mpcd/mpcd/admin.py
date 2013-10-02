@@ -19,14 +19,10 @@ class MyAdminSite(admin.AdminSite):
         urls = super(MyAdminSite, self).get_urls()
 
         my_urls = patterns('',
-            # (r'^$', self.admin_view(self.index_mod), name='index_mod'),
-            # (r'^analyze/$', self.admin_view(self.my_view)),
-            url(r'^analyze/$', include('analyze.urls', namespace="analyze")),
+            url(r'^(?P<app_name>analyze)/', include('analyze.urls', namespace="analyze")),
         )
         return my_urls + urls
 
-    def my_view(self, request):
-        return HttpResponse("Hello2")
         
 admin_site = MyAdminSite('myadmin')  
 

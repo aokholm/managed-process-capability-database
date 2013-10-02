@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.http import HttpResponse
 
@@ -12,10 +13,15 @@ from django.contrib.auth.models import Group, User
 
 class MyAdminSite(admin.AdminSite):
 
+    index_template = 'admin/index_mod.html'
+
     def get_urls(self):
         urls = super(MyAdminSite, self).get_urls()
+
         my_urls = patterns('',
-            (r'^my_view2/$', self.admin_view(self.my_view)),
+            # (r'^$', self.admin_view(self.index_mod), name='index_mod'),
+            # (r'^analyze/$', self.admin_view(self.my_view)),
+            url(r'^analyze/$', include('analyze.urls', namespace="analyze")),
         )
         return my_urls + urls
 

@@ -16,6 +16,9 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^$', lambda r : HttpResponseRedirect('myadmin/')),
+    (r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+
     url(r'myadmin/', include(admin_site.urls)),
     url(r'^default_admin/', include(admin.site.urls))
+
 )

@@ -14,10 +14,11 @@
           var json_data = new google.visualization.DataTable({{json}}, 0.6);
          
           var options = {
-          title: 'Age vs. Weight comparison',
+          title: 'Bias vs. Deviation',
           <!-- hAxis: {title: 'Age', minValue: 0, maxValue: 15}, -->
           <!-- vAxis: {title: 'Weight', minValue: 0, maxValue: 15}, -->
-          series: {0:{color: 'black', lineWidth: 0, pointSize: 1, visibleInLegend: false}}
+          series: {0:{color: 'red', lineWidth: 1, pointSize: 1, visibleInLegend: true},
+                   1:{color: 'black', lineWidth: 0, pointSize: 1, visibleInLegend: false}}
         };
 
 
@@ -47,8 +48,8 @@
     <div id="table_div_json"></div>
 
     <form method="GET">
-    Upper Tolerance: <input type="text" name="upper"><br/>
-    Lower Tolerance: <input type="text" name="lower"><br/>
+    Upper Tolerance: <input type="text" name="upper" value={{upper}}><br/>
+    Lower Tolerance: <input type="text" name="lower" value={{lower}}><br/>
     <input type="submit" value="Submit" />
     </form><br/><br/>
     

@@ -88,10 +88,10 @@ def process(request, app_name):
     measurements_sets = MeasurementSet.objects.all()
 
     upper = 0.4
-    lower = 0.4
+    lower = -0.4
     if request.GET.get('upper'):
-        upper = request.GET.get('upper')
-        lower = request.GET.get('lower')
+        upper = float(request.GET.get('upper'))
+        lower = float(request.GET.get('lower'))
 
     tolx = [lower, (upper+lower)/2 , upper]
     toly = [0, (upper - lower)/6, 0]
@@ -100,9 +100,9 @@ def process(request, app_name):
     dev = [messet.measurement_std for messet in measurements_sets]
 
     # Creating the data
-    description = [("Bias", "number"), ("Deviation", "number"),]
+    description = [("Bias", "number"), ("CPK =1", "number"),("Deviation","number")]
     
-    data = zip(bias,dev) 
+    data = chartDataJoin([tolx, bias],[toly, dev]) 
 
     # Loading it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)
@@ -118,5 +118,7 @@ def process(request, app_name):
             'view_label': 'process',
             'measurement_sets': measurements_sets,
             'json' : mark_safe(json),
+            'upper' : upper,
+            'lower' :lower,
         })
         

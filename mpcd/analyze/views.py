@@ -1,6 +1,7 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from mesdata.models import MeasurementSet, Queries
+from mesdata.models import MeasurementSet
+
 
 import numpy as np, math
 # # import matplotlib.pyplot as plt
@@ -75,14 +76,22 @@ def design(request, app_name):
 def process(request, app_name):
     measurements_sets = MeasurementSet.objects.all()
 
+    upper = 0.4
+    lower = 0.4
+    if request.GET.get('upper'):
+        upper = request.GET.get('upper')
+        lower = request.GET.get('lower')
+
+    tolx = [lower, (upper+lower)/2 , upper]
+    toly = [0, (upper - lower)/6, 0]
+
     bias = [messet.measurement_bias for messet in measurements_sets]
     dev = [messet.measurement_std for messet in measurements_sets]
 
     # Creating the data
-    description = [("Bias", "number"), ("Deviation", "number")]
-    data = zip(bias,dev)
-
-    #zip(bias,dev) 
+    description = [("Bias", "number"), ("Deviation", "number"),]
+    
+    data = zip(bias,dev) 
 
     # Loading it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)
@@ -91,15 +100,8 @@ def process(request, app_name):
     # Creating a JSon string
     json = data_table.ToJSon()
 
-    questions=None
-    if request.GET.get('search'):
-        search = request.GET.get('search')
-        questions = Queries.objects.filter(query__icontains=search)
-
-        name = request.GET.get('name')
-        query = Queries.objects.create(query=search, user_id=name)
-        query.save()
-
+   
+        
 
 
     return render(request, 'analyze/process.html', 
@@ -108,5 +110,4 @@ def process(request, app_name):
             'view_label': 'process',
             'measurement_sets': measurements_sets,
             'json' : mark_safe(json),
-            'questions': questions,
         })

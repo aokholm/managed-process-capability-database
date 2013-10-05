@@ -54,11 +54,4 @@ class MeasurementSet(models.Model):
     def autocomplete_search_fields():
         return ("id__iexact", "material__icontains","process__icontains","equipment__icontains","generaltag__icontains",)
     
-class Cpkline(forms.Form):
-    upper_tol = forms.DecimalField()
-    lower_tol = forms.DecimalField()
-
-class Queries(models.Model):
-    user_id=models.CharField(max_length=200)
-    query=models.CharField(max_length=200)
 

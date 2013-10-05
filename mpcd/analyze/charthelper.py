@@ -11,7 +11,7 @@ def _chartDataJoinX(list_of_xcols):
     if (len(list_of_xcols) > 2): # if more than two cols
         new_list_of_xcols = [x] 
         new_list_of_xcols.extend(list_of_xcols[2:])
-        return ChartDataJoinX(new_list_of_xcols)
+        return _chartDataJoinX(new_list_of_xcols)
     else:
         return x
 

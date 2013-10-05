@@ -60,10 +60,10 @@ def design(request, app_name):
     cdf = [norm.cdf(x[i], loc=mean, scale=std) for i in range(100)]
     cdf_std = [math.sqrt(cdf[i]*(1-cdf[i]) / Ndata)  for i in range(100)]
     cdfll = [cdf[i] - 2*cdf[i] * t * cdf_std[i] for i in range(100)]
-    cfdul = [cdf[i] + 2*(1-cdf[i]) * t * cdf_std[i] for i in range(100)]
+    cdful = [cdf[i] + 2*(1-cdf[i]) * t * cdf_std[i] for i in range(100)]
 
-    description = [('x_value', 'number'), ('cum_rank', 'number', 'Cum. ITG.'), ('cdf', 'number')]
-    data = chartDataJoin([input_data, x],[cum_rank, cdf])
+    description = [('x_value', 'number'), ('cum_rank', 'number', 'Cum. ITG.'), ('cdf', 'number'), ('cdfll', 'number'), ('cdful', 'number')]
+    data = chartDataJoin([input_data, x, x, x],[cum_rank, cdf, cdfll, cdful])
 
     # Loading it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)

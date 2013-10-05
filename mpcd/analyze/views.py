@@ -100,9 +100,18 @@ def process(request, app_name):
     dev = [messet.measurement_std for messet in measurements_sets]
 
     # Creating the data
-    description = [("Bias", "number"), ("CPK =1", "number"),("Deviation","number")]
+    description = [("Bias", "number"), ("CPK =1", "number"),("Deviation","number"),("Tip","String","Tip",{"role":"tooltip"})]
     
     data = chartDataJoin([tolx, bias],[toly, dev]) 
+
+    id_set = [messet.id for messet in measurements_sets]
+
+    tooltip_label = ["","",""]
+    for x in range(len(bias)):
+        tooltip_label.append("Measurement set No. %s" % id_set[x])
+
+    for x in range(len(data)):
+        data[x].append(tooltip_label[x])
 
     # Loading it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)

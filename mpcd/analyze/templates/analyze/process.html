@@ -45,6 +45,17 @@
 
     <H1>Scatterplot</H1>
     <div id="table_div_json"></div>
+
+    <form method="GET">
+    Question: <input type="text" name="search"><br/>
+    Name: <input type="text" name="name"><br/>
+    <input type="submit" value="Submit" />
+    </form><br/><br/>
+
+
+    {% for question in questions %}
+      <p>{{question.user_id}}, {{question.query}}</p>
+    {% endfor %}
 {% endblock %}
 
 

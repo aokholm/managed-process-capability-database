@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from mesdata.models import MeasurementSet
+from mesdata.models import MeasurementSet, Queries
 
 import numpy as np, math
 # # import matplotlib.pyplot as plt
@@ -91,10 +91,22 @@ def process(request, app_name):
     # Creating a JSon string
     json = data_table.ToJSon()
 
+    questions=None
+    if request.GET.get('search'):
+        search = request.GET.get('search')
+        questions = Queries.objects.filter(query__icontains=search)
+
+        name = request.GET.get('name')
+        query = Queries.objects.create(query=search, user_id=name)
+        query.save()
+
+
+
     return render(request, 'analyze/process.html', 
         {
             'app_label': app_name,
             'view_label': 'process',
             'measurement_sets': measurements_sets,
             'json' : mark_safe(json),
+            'questions': questions,
         })

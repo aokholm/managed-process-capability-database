@@ -1,15 +1,17 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from mesdata.models import MeasurementSet
+from analyze.charthelper import chartDataJoin
+from django.utils.safestring import mark_safe
 
 import numpy as np, math
 # # import matplotlib.pyplot as plt
 from prettytable import PrettyTable
 from scipy.stats import norm, chi2
 #from lib.ITGrade import ITGrade as itg
-
 #import scipy.stats as ss
 
+import gviz_api
 
 # Create your views here.
 def index(request, app_name):
@@ -21,6 +23,10 @@ def index(request, app_name):
 
 
 def design(request, app_name):
+
+
+    
+    ###
     measurements_sets = MeasurementSet.objects.all().prefetch_related('process', 'material')
 
     itgrades = sorted([messet.measurement_itg for messet in measurements_sets])
@@ -53,11 +59,26 @@ def design(request, app_name):
     plotStart   = norm.isf(0.001, loc=mean, scale=std)
     plotEnd     = norm.isf(0.999, loc=mean, scale=std)
 
-    x = np.linspace(plotStart,plotEnd, 100)
+    x = np.linspace(plotStart,plotEnd, 100).tolist()
     cdf = [norm.cdf(x[i], loc=mean, scale=std) for i in range(100)]
     cdf_std = [math.sqrt(cdf[i]*(1-cdf[i]) / Ndata)  for i in range(100)]
     cdfll = [cdf[i] - 2*cdf[i] * t * cdf_std[i] for i in range(100)]
     cfdul = [cdf[i] + 2*(1-cdf[i]) * t * cdf_std[i] for i in range(100)]
+
+
+    description = [('x_value', 'number'), ('cum_rank', 'number', 'Cum. ITG.'), ('cdf', 'number')]
+    data = chartDataJoin([input_data, x],[cum_rank, cdf])
+
+    # data = 
+
+    # Loading it into gviz_api.DataTable
+    data_table = gviz_api.DataTable(description)
+    data_table.LoadData(data)
+
+    # Creating a JSon string
+    json = data_table.ToJSon()
+
+
 
 
     return render(request, 'analyze/design.html', 
@@ -67,6 +88,7 @@ def design(request, app_name):
             'itgrades' : itgrades,
             'measurement_sets': measurements_sets,
             'table' : mytable,
+            'json' : mark_safe(json),
 
         })
 
@@ -76,4 +98,3 @@ def process(request, app_name):
             'app_label': app_name,
             'view_label': 'process'
         })
-        

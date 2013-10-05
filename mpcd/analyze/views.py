@@ -1,7 +1,15 @@
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+<<<<<<< HEAD
 from mesdata.models import MeasurementSet
 
+=======
+<<<<<<< HEAD
+from mesdata.models import MeasurementSet, Queries
+=======
+from mesdata.models import MeasurementSet
+>>>>>>> parent of e91d61a... Created chart helper function. Updated design plus view to use chart helper
+>>>>>>> 1b45b0a0535cf233f2585c49f545d7710dbf4657
 
 import numpy as np, math
 # # import matplotlib.pyplot as plt
@@ -11,8 +19,11 @@ from scipy.stats import norm, chi2
 
 #import scipy.stats as ss
 
+<<<<<<< HEAD
 import gviz_api
 from django.utils.safestring import mark_safe
+=======
+>>>>>>> parent of e91d61a... Created chart helper function. Updated design plus view to use chart helper
 
 # Create your views here.
 def index(request, app_name):
@@ -72,6 +83,7 @@ def design(request, app_name):
             'table' : mytable,
 
         })
+<<<<<<< HEAD
 
 def process(request, app_name):
     measurements_sets = MeasurementSet.objects.all()
@@ -103,11 +115,24 @@ def process(request, app_name):
    
         
 
+=======
+>>>>>>> parent of e91d61a... Created chart helper function. Updated design plus view to use chart helper
 
     return render(request, 'analyze/process.html', 
         {
             'app_label': app_name,
+<<<<<<< HEAD
             'view_label': 'process',
             'measurement_sets': measurements_sets,
             'json' : mark_safe(json),
+<<<<<<< HEAD
         })
+=======
+            'questions': questions,
+        })
+=======
+            'view_label': 'process'
+        })
+        
+>>>>>>> parent of e91d61a... Created chart helper function. Updated design plus view to use chart helper
+>>>>>>> 1b45b0a0535cf233f2585c49f545d7710dbf4657

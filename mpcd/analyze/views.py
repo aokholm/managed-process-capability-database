@@ -98,6 +98,8 @@ def process(request, app_name):
 
     bias = [messet.measurement_bias for messet in measurements_sets]
     dev = [messet.measurement_std for messet in measurements_sets]
+    count = [messet.measurement_count for messet in measurements_sets]
+    itg = [messet.measurement_itg for messet in measurements_sets]
 
     # Creating the data
     description = [("Bias", "number"), ("CPK =1", "number"),("Deviation","number"),("Tip","String","Tip",{"role":"tooltip"})]
@@ -106,7 +108,7 @@ def process(request, app_name):
 
     id_set = [messet.id for messet in measurements_sets]
 
-    tooltip_label = ["","",""]
+    tooltip_label = [" "," "," "]
     for x in range(len(bias)):
         tooltip_label.append("Measurement set No. %s" % id_set[x])
 
@@ -121,6 +123,15 @@ def process(request, app_name):
     json = data_table.ToJSon()
 
    
+    rough_table = PrettyTable()
+    
+    rough_table.add_column("Id", id_set)
+    rough_table.add_column("It grade", itg)
+    rough_table.add_column("Bias", bias)
+    rough_table.add_column("Std. Deviation", dev)
+    rough_table.add_column("No. of Measurements", count)
+
+
     return render(request, 'analyze/process.html', 
         {
             'app_label': app_name,
@@ -129,5 +140,6 @@ def process(request, app_name):
             'json' : mark_safe(json),
             'upper' : upper,
             'lower' :lower,
+            'table' : rough_table,
         })
         

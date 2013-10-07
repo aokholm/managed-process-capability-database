@@ -62,8 +62,15 @@ def design(request, app_name):
     cdfll = [cdf[i] - 2*cdf[i] * t * cdf_std[i] for i in range(100)]
     cdful = [cdf[i] + 2*(1-cdf[i]) * t * cdf_std[i] for i in range(100)]
 
-    description = [('x_value', 'number'), ('cum_rank', 'number', 'Cum. ITG.'), ('cdf', 'number'), ('cdfll', 'number'), ('cdful', 'number')]
-    data = chartDataJoin([input_data, x, x, x],[cum_rank, cdf, cdfll, cdful])
+    # description = [('x_value', 'number'), ('cum_rank', 'number', 'Cum. ITG.'), ('cdf', 'number'), ('cdfll', 'number'), ('cdful', 'number')]
+    # chardata = chartDataJoin([input_data, x, x, x],[cum_rank, cdf, cdfll, cdful])
+    
+
+    description = [('x_value', 'number'), ('cum_rank', 'number', 'Cum. ITG.'), ('cdf', 'number'), ('cdfll', 'number'), ('cdful', 'number'), ("tooltip","String","tooltip",{"role":"tooltip"})]
+    chardata = chartDataJoin([input_data, x, x, x],[cum_rank, cdf, cdfll, cdful])
+    [chardata[i].append(None) for i in range(len(chardata))]
+
+    data = chardata
 
     # Loading it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)

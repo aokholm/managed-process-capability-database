@@ -31,22 +31,28 @@
                     },
                     // series 1 is the Line
                     1: {
-                        lineWidth: 1,
-                        pointSize: 0
-                        
+                        lineWidth: 2,
+                        pointSize: 0,
+                        color: 'red',
+                        enableInteractivity: false,
+                        tooltip: 'none'
                     },
                     2: {
                         lineWidth: 1,
-                        pointSize: 0
+                        pointSize: 0,
+                        color: 'blue',
+                        enableInteractivity: false,
+                        tooltip: 'none'
                     },
                     3: {
                         lineWidth: 1,
-                        pointSize: 0
+                        pointSize: 0,
+                        color: 'blue',
+                        enableInteractivity: false,
+                        tooltip: 'none'
                     }
                 },
-                tooltip : {
-                          trigger: 'none'
-                        }
+                // colors: ['blue', 'red', 'blue', 'blue']
             };
 
             json_chart.draw(json_data, options);

@@ -6,25 +6,32 @@ from numpy import mean, std
 
 # admin MEASUREMENT
 class MeasurementInline(admin.TabularInline):
+    classes = ('grp-collapse grp-open',)
     model = Measurement
     extra = 10
 
 class MeasurementSetAdmin(admin.ModelAdmin):
-    raw_id_fields = ('material','process','generaltag','equipment')
+    raw_id_fields = ('material','process','generaltag','equipment',)
+
     autocomplete_lookup_fields = {
-        'fk':['material','process'],
+        'fk' : ['material', 'process', 'equipment'],
+        'm2m' : ['generaltag'],
     }
 
     readonly_fields = ('id',)
+    list_display = ('id','measurement_count','measurement_itg','nominal_size','pub_date',)
 
     fieldsets = [
-    (None,                          {'fields': ['nominal_size','material','process','generaltag','equipment','measurement_type','tol_up','tol_low','pub_date' ]}),
-    ('Confidential information',    {'fields': ['price','weight','manufac','measured','machine','pro_yield']}),
+        (None,   {
+            'classes': ('grp-collapse grp-open',),
+            'fields': ['nominal_size','material','process','equipment','generaltag','measurement_type','tol_up','tol_low','pub_date' ]
+        }),
+        ('Confidential information', {
+            'classes': ('grp-collapse grp-open',),
+            'fields': ['price','weight','manufac','measured','machine','pro_yield']
+        }),
     ]
-
-    inlines = [MeasurementInline, ]
-
-    list_display = ('id','measurement_count','measurement_itg','nominal_size','pub_date',)
+    inlines = (MeasurementInline, )
 
     def response_add(self, request, new_object):
         obj = self.after_saving_model_and_related_inlines(new_object)
@@ -35,7 +42,6 @@ class MeasurementSetAdmin(admin.ModelAdmin):
         return super(MeasurementSetAdmin, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, obj):
-        #print obj.related_set.all()
         measurements = [x.actual_size for x in obj.measurements.all()]
         obj.measurement_count = len(measurements)
         nominal_size = obj.nominal_size

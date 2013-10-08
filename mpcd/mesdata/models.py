@@ -31,6 +31,7 @@ class MeasurementSet(models.Model):
     pub_date = models.DateTimeField('date published',default=datetime.now, blank=False)
 
     material = models.ForeignKey('tags.Material', related_name='measurement_sets')
+    material.allow_tags = True
     process = models.ForeignKey('tags.Process',related_name='measurement_sets')
     generaltag = models.ManyToManyField('tags.GeneralTag',related_name='measurement_sets',blank=True,null=True)
     equipment = models.ForeignKey('tags.MeasurementEquipment',related_name='measurement_sets')
@@ -49,9 +50,3 @@ class MeasurementSet(models.Model):
 
     def __unicode__(self):
         return """Measurement Set %s""" % (self.id)
-
-    @staticmethod
-    def autocomplete_search_fields():
-        return ("id__iexact", "material__icontains","process__icontains","equipment__icontains","generaltag__icontains",)
-    
-

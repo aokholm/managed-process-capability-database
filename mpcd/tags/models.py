@@ -14,21 +14,12 @@ class MaterialAlternativeName(models.Model):
     def __unicode__(self):
         return self.name
 
-    @staticmethod
-    def autocomplete_search_fields():
-        return ("material_node__iexact", "name__icontains",)
-
 class ProcessAlternativeName(models.Model):
     name = models.CharField(max_length=60, unique=True)
     process_node = models.ForeignKey('Process', related_name='process_names')
 
     def __unicode__(self):
         return self.name
-
-    @staticmethod
-    def autocomplete_search_fields():
-        return ("process_node__iexact", "name__icontains",)
-
 
 class Material(MPTTModel):
     name = models.CharField(max_length=60, unique=True)
@@ -46,7 +37,26 @@ class Material(MPTTModel):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("material_node__iexact", "name__icontains",)
+        return ("name__icontains", ) # "material_names__name__icontains",  "parent__name__icontains"
+
+    def related_label(self):
+        indents = '-' * self.level
+        indent_string = ' '.join(indents)
+        children = (self.rght - self.lft-1)/2
+        if children:
+            children = u" - %s submaterials" % (children)
+        else:
+            children = ""
+
+        alternative_names = self.alternative_names_()
+        if alternative_names == "":
+            alternative_names = ""
+        else:
+            alternative_names = u" | %s" % alternative_names
+
+        return u"%s %s%s%s" % (indent_string, self.name, children, alternative_names)
+        # indent_px = self.level * 10 + 5
+        # return u"<p style='padding-left: %spx;'>%s (%s)</p>" % (indent_px, self.name, self.alternative_names_())
 
 
 class Process(MPTTModel):
@@ -65,7 +75,24 @@ class Process(MPTTModel):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("material_node__iexact", "name__icontains",)
+        return ("name__icontains", ) # "process_names__name__icontains"
+
+    def related_label(self):
+        indents = '-' * self.level
+        indent_string = ' '.join(indents)
+        children = (self.rght - self.lft-1)/2
+        if children:
+            children = u" - %s subprocesses" % (children)
+        else:
+            children = ""
+
+        alternative_names = self.alternative_names_()
+        if alternative_names == "":
+            alternative_names = ""
+        else:
+            alternative_names = u" | %s" % alternative_names
+
+        return u"%s %s%s%s" % (indent_string, self.name, children, alternative_names)
 
 
 class GeneralTag(MPTTModel):
@@ -80,7 +107,18 @@ class GeneralTag(MPTTModel):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("material_node__iexact", "name__icontains",)
+        return ("name__icontains", ) # "process_names__name__icontains"
+
+    def related_label(self):
+        indents = '-' * self.level
+        indent_string = ' '.join(indents)
+        children = (self.rght - self.lft-1)/2
+        if children:
+            children = u" - %s sub tags" % (children)
+        else:
+            children = ""
+
+        return u"%s %s%s" % (indent_string, self.name, children)
 
 class MeasurementEquipment(MPTTModel):
     name = models.CharField(max_length=60, unique=True)
@@ -94,4 +132,15 @@ class MeasurementEquipment(MPTTModel):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("material_node__iexact", "name__icontains",)
+        return ("name__icontains", ) # "process_names__name__icontains"
+
+    def related_label(self):
+        indents = '-' * self.level
+        indent_string = ' '.join(indents)
+        children = (self.rght - self.lft-1)/2
+        if children:
+            children = u" - %s submeasurement-equipment " % (children)
+        else:
+            children = ""
+
+        return u"%s %s%s" % (indent_string, self.name, children)

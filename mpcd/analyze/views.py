@@ -83,7 +83,7 @@ def design(request, app_name):
             'json' : mark_safe(json),
 
         })
-
+    
 def process(request, app_name):
     measurements_sets = MeasurementSet.objects.all()
 
@@ -95,34 +95,76 @@ def process(request, app_name):
 
     tolx = [lower, (upper+lower)/2 , upper]
     toly = [0, (upper - lower)/6, 0]
+    tol_label = ["Bla1","bla2","bla3"]
 
     bias = [messet.measurement_bias for messet in measurements_sets]
     dev = [messet.measurement_std for messet in measurements_sets]
-    count = [messet.measurement_count for messet in measurements_sets]
-    itg = [messet.measurement_itg for messet in measurements_sets]
-
-    # Creating the data
-    description = [("Bias", "number"), ("CPK =1", "number"),("Deviation","number"),("Tip","String","Tip",{"role":"tooltip"})]
-    
-    data = chartDataJoin([tolx, bias],[toly, dev]) 
-
     id_set = [messet.id for messet in measurements_sets]
 
-    tooltip_label = [" "," "," "]
-    for x in range(len(bias)):
-        tooltip_label.append("Measurement set No. %s" % id_set[x])
+    # Creating the data
+    description = {
+        "Bias": ("number","Bias"),
+        "Cpk": ("number","Cpk =1"),
+        "Cpk_tool": ("string","Tip1",{"role":"tooltip"}),
+        "Deviation":("number","Measurement Sets"),
+        "Deviation_tool": ("string","Tip2",{"role":"tooltip"})
+    }
 
-    for x in range(len(data)):
-        data[x].append(tooltip_label[x])
+    data = []
+
+    for x in range(3):
+        data.append({
+            "Bias":tolx[x],
+            "Cpk":toly[x],
+            "Cpk_tool":" "
+            })
+
+    for x in range(len(bias)):
+        data.append({
+            "Bias":bias[x],
+            "Deviation":dev[x],
+            "Deviation_tool":("Measurement set No. %s" % id_set[x])
+            })
 
     # Loading it into gviz_api.DataTable
     data_table = gviz_api.DataTable(description)
     data_table.LoadData(data)
 
     # Creating a JSon string
-    json = data_table.ToJSon()
+    json = data_table.ToJSon(columns_order=("Bias","Cpk","Cpk_tool","Deviation","Deviation_tool"))
 
+    count = [messet.measurement_count for messet in measurements_sets]
+    itg = [messet.measurement_itg for messet in measurements_sets]
    
+    option = {
+        'title': 'Bias vs. Deviation',
+        'hAxis:': { 
+            'title': 'bias'
+        },
+        'vAxis': {
+            'title': 'Deviation',
+        },
+        'series': {
+            0:{
+                #'color': 'red', 
+                'lineWidth': 2, 
+                'pointSize': 0, 
+                'visibleInLegend': 'true',
+                'enableInteractivity': 'false',
+                'tooltip':'false',
+            },
+            1:{
+                #'color': 'blue', 
+                'lineWidth': 0, 
+                'pointSize': 3, 
+                'visibleInLegend': 'true',
+            },
+        },
+    }
+
+
+
+
     rough_table = PrettyTable()
     
     rough_table.add_column("Id", id_set)
@@ -130,7 +172,6 @@ def process(request, app_name):
     rough_table.add_column("Bias", bias)
     rough_table.add_column("Std. Deviation", dev)
     rough_table.add_column("No. of Measurements", count)
-
 
     return render(request, 'analyze/process.html', 
         {
@@ -141,5 +182,6 @@ def process(request, app_name):
             'upper' : upper,
             'lower' :lower,
             'table' : rough_table,
+            'option' : option,
         })
         
